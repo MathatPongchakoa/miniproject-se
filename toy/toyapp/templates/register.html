@@ -1,0 +1,7 @@
+<h1>ลงทะเบียน</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ลงทะเบียน</button>
+</form>
+<p>มีบัญชีแล้ว? <a href="{% url 'login' %}">เข้าสู่ระบบ</a></p>

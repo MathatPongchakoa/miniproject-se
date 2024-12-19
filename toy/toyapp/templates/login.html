@@ -1,0 +1,7 @@
+<h1>เข้าสู่ระบบ</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">เข้าสู่ระบบ</button>
+</form>
+<p>ยังไม่มีบัญชี? <a href="{% url 'register' %}">ลงทะเบียน</a></p>

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}รายการโปรดของฉัน{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+    <!-- หัวข้อ -->
+    <h1 class="text-3xl font-bold text-center text-blue-600 mb-6">รายการโปรดของฉัน</h1>
+
+    <!-- รายการโปรด -->
+    <ul class="space-y-4">
+        {% for favorite in favorites %}
+        <li class="p-4 border border-gray-300 rounded-lg flex justify-between items-center">
+            <div>
+                <h3 class="text-lg font-semibold text-blue-600">{{ favorite.toy.name }}</h3>
+            </div>
+            <a href="{% url 'toy_detail' favorite.toy.id %}" 
+               class="text-blue-500 hover:underline">
+                ดูรายละเอียด
+            </a>
+        </li>
+        {% empty %}
+        <p class="text-center text-gray-500">คุณยังไม่มีของเล่นในรายการโปรด</p>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

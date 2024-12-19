@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+    <!-- หัวข้อ -->
+    <h1 class="text-3xl font-bold text-blue-600 mb-6">Welcome Admin</h1>
+    <p class="text-lg text-gray-600 mb-4">ยินดีต้อนรับ {{ user.username }}</p>
+ 
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เพิ่มของเล่นใหม่</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Container หลัก -->
+    <div class="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+        <!-- หัวข้อ -->
+        <h1 class="text-2xl font-bold text-blue-600 mb-6 text-center">เพิ่มของเล่นใหม่</h1>
+
+        <!-- ฟอร์มเพิ่มของเล่น -->
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- ชื่อของเล่น -->
+            <div>
+                <label for="name" class="block text-lg font-medium text-gray-700">ชื่อของเล่น:</label>
+                <input type="text" id="name" name="name" required
+                       class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <!-- ราคา -->
+            <div>
+                <label for="price" class="block text-lg font-medium text-gray-700">ราคา:</label>
+                <input type="number" id="price" name="price" step="0.01" required
+                       class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <!-- ช่วงอายุ -->
+            <div>
+                <label for="age_range" class="block text-lg font-medium text-gray-700">ช่วงอายุ:</label>
+                <input type="text" id="age_range" name="age_range" required
+                       class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <!-- รายละเอียด -->
+            <div>
+                <label for="description" class="block text-lg font-medium text-gray-700">รายละเอียด:</label>
+                <textarea id="description" name="description" required
+                          class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+
+            <!-- หมวดหมู่ -->
+            <div>
+                <label for="category" class="block text-lg font-medium text-gray-700">หมวดหมู่:</label>
+                <select id="category" name="category" required
+                        class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">-- เลือกหมวดหมู่ --</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- รูปภาพ -->
+            <div>
+                <label for="image" class="block text-lg font-medium text-gray-700">รูปภาพ:</label>
+                <input type="file" id="image" name="image" required
+                       class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <!-- ปุ่มบันทึก -->
+            <button type="submit" 
+                    class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+                บันทึก
+            </button>
+        </form>
+
+        <!-- ลิงก์กลับ -->
+        <div class="mt-6 text-center">
+            <a href="{% url 'toy_list' %}" class="text-blue-500 hover:underline">
+                กลับไปหน้าของเล่น
+            </a>
+        </div>
+    </div>
+</body>
+</html>

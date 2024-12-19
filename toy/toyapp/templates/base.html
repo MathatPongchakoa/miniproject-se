@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}เว็บไซต์ของเล่น{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-600 text-white p-4">
+        <ul class="flex justify-center space-x-6">
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                    <!-- Navigation สำหรับ Admin -->
+                    <li><a href="{% url 'add_toy' %}" class="hover:underline">เพิ่มของเล่น</a></li>
+                    <li><a href="{% url 'add_category' %}" class="hover:underline">เพิ่มหมวดหมู่</a></li>
+                    <li><a href="{% url 'toy_list' %}" class="hover:underline">รายการของเล่น</a></li>
+                    <li><a href="{% url 'logout' %}" class="hover:underline text-red-300">ออกจากระบบ</a></li>
+                {% else %}
+                    <!-- Navigation สำหรับ User -->
+                    <li><a href="{% url 'toy_list' %}" class="hover:underline">หน้าแรก</a></li>
+                    <li><a href="{% url 'favorites_list' %}" class="hover:underline">รายการโปรดของฉัน</a></li>
+                    <li><a href="{% url 'logout' %}" class="hover:underline text-red-300">ออกจากระบบ</a></li>
+                {% endif %}
+            {% else %}
+                <!-- Navigation สำหรับผู้ใช้ที่ยังไม่ได้ล็อกอิน -->
+                <li><a href="{% url 'login' %}" class="hover:underline">เข้าสู่ระบบ</a></li>
+                <li><a href="{% url 'register' %}" class="hover:underline">ลงทะเบียน</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Content Block -->
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

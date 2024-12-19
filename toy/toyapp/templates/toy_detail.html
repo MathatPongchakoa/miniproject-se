@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ toy.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+    <!-- รูปภาพของเล่น -->
+    <div class="text-center mb-6">
+        <img src="{{ toy.image.url }}" alt="{{ toy.name }}" class="mx-auto rounded-lg shadow-lg w-96 h-auto">
+    </div>
+
+    <!-- รายละเอียดของเล่น -->
+    <div class="mb-6">
+        <h1 class="text-4xl font-bold text-blue-600 mb-4">{{ toy.name }}</h1>
+        <p class="text-lg font-medium text-gray-700">ราคา: <span class="text-blue-600">{{ toy.price }} บาท</span></p>
+        <p class="text-lg font-medium text-gray-700">ช่วงอายุ: <span class="text-blue-600">{{ toy.age_range }}</span></p>
+        <p class="text-gray-600 mt-4">{{ toy.description }}</p>
+    </div>
+
+    <!-- เพิ่มในรายการโปรด -->
+    <div class="mb-6">
+        <a href="{% url 'add_to_favorites' toy.id %}" 
+           class="bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition inline-block">
+            เพิ่มในรายการโปรด
+        </a>
+    </div>
+
+    <!-- รีวิว -->
+    <div class="mt-8">
+        <h2 class="text-2xl font-semibold text-blue-600 mb-4">รีวิว</h2>
+        <p class="text-lg font-medium text-gray-700">คะแนนเฉลี่ย: 
+            <span class="text-blue-600">{{ average_rating|default:"ยังไม่มีคะแนน" }}</span>
+        </p>
+        <ul class="space-y-4 mt-4">
+            {% for review in reviews %}
+            <li class="border border-gray-300 rounded-lg p-4 bg-gray-50 shadow-sm">
+                <p class="text-blue-600 font-medium">{{ review.user.username }}</p>
+                <p>คะแนน: <span class="text-yellow-500">{{ review.rating }}</span></p>
+                <p>{{ review.comment }}</p>
+            </li>
+            {% empty %}
+            <p class="text-center text-gray-500">ยังไม่มีรีวิวสำหรับของเล่นนี้</p>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- เพิ่มรีวิว -->
+    {% if user.is_authenticated %}
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">เพิ่มรีวิวของคุณ</h3>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" 
+                    class="bg-green-500 text-white px-5 py-3 rounded-lg hover:bg-green-700 transition">
+                เพิ่มรีวิว
+            </button>
+        </form>
+    </div>
+    {% else %}
+    <p class="mt-8 text-center text-gray-600">
+        กรุณา <a href="{% url 'login' %}" class="text-blue-500 hover:underline">เข้าสู่ระบบ</a> เพื่อรีวิว
+    </p>
+    {% endif %}
+</div>
+{% endblock %}
