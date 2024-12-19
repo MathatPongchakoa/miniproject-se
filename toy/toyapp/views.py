@@ -9,6 +9,10 @@ from django.contrib.auth import login, logout
 from .forms import UserRegisterForm
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 
 def toy_list(request):
     category = request.GET.get('category')
@@ -56,33 +60,57 @@ def favorites_list(request):
 
 def register(request):
     if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')
-    else:
-        form = UserRegisterForm()
-    return render(request, 'register.html', {'form': form})
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
 
-@csrf_exempt
+        # ตรวจสอบว่ารหัสผ่านตรงกัน
+        if password != password2:
+            messages.error(request, "รหัสผ่านไม่ตรงกัน")
+            return redirect('register')
+
+        # ตรวจสอบว่าชื่อผู้ใช้ซ้ำหรือไม่
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "ชื่อผู้ใช้นี้มีอยู่แล้ว")
+            return redirect('register')
+
+        # ตรวจสอบว่าอีเมลซ้ำหรือไม่
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "อีเมลนี้มีอยู่แล้ว")
+            return redirect('register')
+
+        # สร้างผู้ใช้ใหม่
+        user = User.objects.create_user(username=username, email=email, password=password)
+        user.save()
+        messages.success(request, "ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ")
+        return redirect('login')
+
+    return render(request, 'register.html')
+
 def user_login(request):
     if request.user.is_authenticated:
-        # ส่งผู้ใช้ที่เข้าสู่ระบบแล้วไปหน้าที่เหมาะสม
+        # หากผู้ใช้เข้าสู่ระบบแล้ว
         if request.user.is_superuser:
             return redirect('admin_home')
         return redirect('toy_list')
 
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # ตรวจสอบข้อมูลผู้ใช้
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
             login(request, user)
+            messages.success(request, "เข้าสู่ระบบสำเร็จ")
             if user.is_superuser:
                 return redirect('admin_home')
             return redirect('toy_list')
-    else:
-        form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+        else:
+            messages.error(request, "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง")
+
+    return render(request, 'login.html')
 
 
 def user_logout(request):
